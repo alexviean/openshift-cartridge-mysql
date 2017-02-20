@@ -11,43 +11,9 @@ function is_running() {
 }
 
 function start() {
-  if is_running; then
-    client_result 'MySQL is already running.'
-  else
-    client_message 'Starting MySQL...'
-    nohup ${OPENSHIFT_DATA_DIR}/mysql/bin/mysqld --defaults-file=${OPENSHIFT_DATA_DIR}/mysql/my.cnf &
-    i=0
-    while ! is_running && [ $i -lt 60 ]; do
-      sleep 1
-      i=$(($i + 1))
-    done
-    if is_running; then
-      client_result 'MySQL started.'
-    else
-      client_result 'Warning! Could not start MySQL!'
-      exit 1
-    fi
-  fi
 }
 
 function stop() {
-  if ! is_running; then
-      client_result 'MySQL is already stopped.'
-  else
-    client_message 'Stopping MySQL...'
-    kill "$(ps -ef | grep 'mysqld' | grep -v grep | awk '{ print $2 }')" > /dev/null 2>&1
-    i=0
-    while is_running && [ $i -lt 60 ]; do
-      sleep 1
-      i=$(($i + 1))
-    done
-    if is_running; then
-      client_result 'Warning! Could not stop MySQL!'
-      exit 1
-    else
-      client_result 'MySQL stopped.'
-    fi
-  fi
 }
 
 function restart() {
